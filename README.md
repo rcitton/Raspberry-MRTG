@@ -1,8 +1,7 @@
 # Raspberry-MRTG
-Raspberry PI with complete graphs.
-For monitoring a Raspberry PI equipped with GPS,NTP time server and some sensors.
+Raspberry PI 4 monitoring with complete graphs.
 ---------------------------------
-![alt tag](https://github.com/rvdhoek/Raspberry-MRTG/blob/master/Printscreen.png)
+![alt tag](https://github.com/rcitton/Raspberry-MRTG/blob/master/Printscreen.png)
 
 Setup:
 ------
@@ -10,7 +9,7 @@ First, update your package list:
 ```
 sudo apt-get update
 ```
-Then download and install MRTG and mode..:
+Then download and install MRTG:
 -------------------------------
 ```
 sudo apt-get install mrtg
@@ -28,46 +27,62 @@ cd /tmp
 Clone all file's:
 -----------------
 ```
-git clone https://github.com/rvdhoek/Raspberry-MRTG
+git clone https://github.com/rcitton/Raspberry-MRTG
 ```
 
 ```
 cd Raspberry-MRTG
-cp -r ./Raspberry-MRTG/. /etc/mrtg/.
-cd/etc/mrtg
+sudo mkdir -p /etc/mrtg
+sudo cp -r . /etc/mrtg/.
+cd /etc/mrtg
 ```
+
+Adding SNMP support for CPU temperature monitoring
+---------------------------
+```
+sudo cp snmp-cpu-temp /usr/local/bin
+```
+edit the SNMP daemon configuration to tell it how to handle this OID.  Edit the file: 'snmpd.conf' and just below the sample ""Pass-through" MIB extension command"  lines, insert a new active "pass" command:
+```
+pass .1.3.6.1.2.1.25.1.8 /bin/sh /usr/local/bin/snmp-cpu-temp
+```
+Restart snmpd:
+```
+sudo service snmpd restart
+```
+and you can then test that it's all working with the command:
+```
+$ snmpget -v 2c localhost -c public .1.3.6.1.2.1.25.1.8
+```
+You should get something like:
+```
+iso.3.6.1.2.1.25.1.8 = Gauge32: 41868
+```
+
 Run the following commands:
 ---------------------------
 ```
 sudo mkdir /var/www/mrtg
 sudo indexmaker --output=/var/www/mrtg/index.html /etc/mrtg/mrtg.cfg
 ```
-Open /etc/apache2/apache.conf and add the following lines in the section containing similar Directory directives:
+Open '/etc/lighttpd' and append/add mod_alias to list of server modules:
 -----------------------------------------------------------------------------------------------------------------
 ```
-Alias /mrtg "/var/www/mrtg/"
-<Directory "/var/www/mrtg/">
-        Options None
-        AllowOverride None
-        Require all granted
-</Directory>
+server.modules += ( "mod_alias" )
 ```
-Run the following commands:
+add mrgt alias:
+```
+alias.url += ("/mrtg" => "/var/www/mrtg/" )
+```
+Set MRTG as service, issuing the following commands:
 ---------------------------
 ```
-sudo service mrtg restart
+sudo cp mrtg.service /lib/systemd/system/mrtg.service
+sudo systemctl enable mrtg
+sudo systemctl start mrtg
 ```
+Resart lighttpd:
+---------------------------
 ```
-sudo service apache2 restart
+service lighttpd restart
 ```
-
-If there are problems:
----------------------
-```
---Run in the commandline: sudo env LANG=C /usr/bin/mrtg /etc/mrtg/mrtg.cfg 
---Run the bash or perl script in the commandline. (bash testport.sh 22)
---Search in google....
-```
-
-
-
