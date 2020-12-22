@@ -174,21 +174,6 @@ PageTop[count-connections]: <H1>Number of established ip connections</H1>
 WithPeak[count-connections]: wmy
 
 #---------------------------------------------------------------
-#  NTP offsets
-#---------------------------------------------------------------
-Target[raspi1_ntp-o]: `perl /etc/mrtg/getntp.pl localhost`
-MaxBytes[raspi1_ntp-o]: 100
-MaxBytes2[raspi1_ntp-o]: 200
-Unscaled[raspi1_ntp-o]: dwmy
-Title[raspi1_ntp-o]: NTP statistics for localhost - offset from NTP
-Options[raspi1_ntp-o]: integer,growright,unknaszero,nopercent,gauge,noinfo,nobanner,withzeroes,noi
-YLegend[raspi1_ntp-o]: offset+100 ms
-ShortLegend[raspi1_ntp-o]: ms
-LegendO[raspi1_ntp-o]: offset:
-Legend2[raspi1_ntp-o]: time offset in ms, with 100ms offset added to ensure it's positive!
-PageTop[raspi1_ntp-o]: <H1>NTP -- localhost</H1>
-
-#---------------------------------------------------------------
 #  Lan hosts
 #---------------------------------------------------------------
 Target[host.counter]: `bash /etc/mrtg/hostcounter.bash`
@@ -202,16 +187,16 @@ PageTop[host.counter]: <H1>Lan hosts</H1>
 WithPeak[host.counter]: wmy
 
 #---------------------------------------------------------------
-#  PPTP users
+#  OpenVPN connections
 #---------------------------------------------------------------
-Target[pptp.counter]: `bash /etc/mrtg/countpptpusers.bash`
+Target[pptp.counter]: `bash /etc/mrtg/countopenvpn.bash`
 Options[pptp.counter]:  integer,nopercent,growright,unknaszero,nopercent,gauge,noinfo,nobanner,withzeroes,noo
 MaxBytes[pptp.counter]:20
 kMG[pptp.counter]: ,
-YLegend[pptp.counter]: PPTP users
-ShortLegend[pptp.counter]: Users
-Title[pptp.counter]: PPTP users
-PageTop[pptp.counter]: <H1>PPTP users</H1>
+YLegend[pptp.counter]: OpenVPN connections
+ShortLegend[pptp.counter]: OpenVPN connections
+Title[pptp.counter]: OpenVPN connections
+PageTop[pptp.counter]: <H1>OpenVPN connections</H1>
 WithPeak[pptp.counter]: wmy
 
 #---------------------------------------------------------------
@@ -225,7 +210,7 @@ Options[8888.ping]: growright,unknaszero,nopercent,gauge,noinfo,nobanner,withzer
 ShortLegend[8888.ping]: ms
 LegendI[8888.ping]: Pkt lose %
 LegendO[8888.ping]: RTT (avg)
-YLegend[8888.ping]: RTT (ms)
+YLegend[8888.ping]: RTT avg (ms)
 
 #---------------------------------------------------------------
 #  Round Trip Time Cloudflare
@@ -238,14 +223,14 @@ Options[1111.ping]: growright,unknaszero,nopercent,gauge,noinfo,nobanner,withzer
 ShortLegend[1111.ping]: ms
 LegendI[1111.ping]: Pkt lose %
 LegendO[1111.ping]: RTT (avg)
-YLegend[1111.ping]: RTT (ms)
+YLegend[1111.ping]: RTT avg (ms)
 
 #---------------------------------------------------------------
 #  Speedtest 1Mb file
 #---------------------------------------------------------------
 Title[speedtest.file1]: Speedtest 1Mb file
 PageTop[speedtest.file1]:<H1>Speedtest 1Mb file</H1>
-Target[speedtest.file1]: `bash /etc/mrtg/speedtest.bash https://www.drupal.org/files/issues/1mb.txt`
+Target[speedtest.file1]: `bash /etc/mrtg/speedtest.bash https://github.com/rcitton/Raspberry-MRTG/blob/main/1mb.txt`
 MaxBytes[speedtest.file1]: 100000000
 Options[speedtest.file1]: growright,unknaszero,nopercent,gauge,noinfo,nobanner,withzeroes,noo
 ShortLegend[speedtest.file1]:
@@ -267,7 +252,7 @@ WithPeak[dns.speed]: wmy
 #---------------------------------------------------------------
 #  Cloudflare DNS Speed
 #---------------------------------------------------------------
-Target[dns1.speed]: `bash /etc/mrtg/speeddns.bash 1.1.1.1
+Target[dns1.speed]: `bash /etc/mrtg/speeddns.bash 1.1.1.1`
 Options[dns1.speed]: growright,unknaszero,nopercent,gauge,noinfo,nobanner,withzeroes,noo
 MaxBytes[dns1.speed]:1000
 YLegend[dns1.speed]: Time (ms)
