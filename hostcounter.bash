@@ -1,12 +1,4 @@
 #! /bin/bash
-COUNTER=0
-for ip in 192.168.178.{1..254}; do
-  ping -c 1 -W 1 $ip > /dev/null 2> /dev/null;
-  if [ $? -eq 0 ]; then
-    #echo "${ip} is up";
-    #arp -n -i eth0 $ip | grep ether >> /dev/null
-    let COUNTER++
-  fi
-done
+COUNTER=$(nmap -sn 192.168.178.0/24|grep "Host is up" |wc -l)
 echo $COUNTER
 echo $COUNTER
