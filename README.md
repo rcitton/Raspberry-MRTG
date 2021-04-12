@@ -62,8 +62,8 @@ iso.3.6.1.2.1.25.1.8 = Gauge32: 41868
 Run the following commands:
 ---------------------------
 ```
-sudo mkdir /var/www/mrtg
-sudo indexmaker --output=/var/www/mrtg/index.html /etc/mrtg/mrtg.cfg
+sudo mkdir /var/www/html/mrtg
+sudo indexmaker --output=/var/www/html/mrtg/index.html /etc/mrtg/mrtg.cfg
 ```
 Open '/etc/lighttpd' and append/add mod_alias to list of server modules:
 -----------------------------------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ server.modules += ( "mod_alias" )
 ```
 add mrgt alias:
 ```
-alias.url += ("/mrtg" => "/var/www/mrtg/" )
+alias.url += ("/mrtg" => "/var/www/html/mrtg/" )
 ```
 Set MRTG as service, issuing the following commands:
 ---------------------------
